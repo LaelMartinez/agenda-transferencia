@@ -1,0 +1,15 @@
+package com.tokio.agenda.entities;
+
+@Entity
+public class Transferencia {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String contaOrigem;
+    private String contaDestino;
+    private BigDecimal valor;
+    private LocalDate dataTransferencia;
+    private LocalDate dataAgendamento;
+    private BigDecimal taxa;
+
+}

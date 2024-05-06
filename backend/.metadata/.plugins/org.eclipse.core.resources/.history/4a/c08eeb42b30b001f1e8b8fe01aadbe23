@@ -1,0 +1,28 @@
+package com.tokio.agenda.services;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class TransferenciaService {
+    public BigDecimal calcularTaxa(LocalDate dataTransferencia, BigDecimal valorTransferencia) {
+        int dias = LocalDate.now().until(dataTransferencia).getDays();
+        BigDecimal taxa = BigDecimal.ZERO;
+
+        if (dias >= 0 && dias <= 3) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.025)).add(BigDecimal.valueOf(3));
+        } else if (dias >= 11 && dias <= 20) {
+            taxa = BigDecimal.ZERO; 
+        } else if (dias >= 21 && dias <= 30) {
+            taxa = BigDecimal.ZERO; 
+        } else if (dias >= 31 && dias <= 40) {
+            taxa = BigDecimal.ZERO; 
+        } else if (dias >= 41 && dias <= 50) {
+            taxa = BigDecimal.ZERO; 
+        }
+        return taxa;
+    }
+
+}

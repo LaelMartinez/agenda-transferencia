@@ -1,0 +1,109 @@
+package com.tokio.agenda.services;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tokio.agenda.DTO.TransferenciaDTO;
+import com.tokio.agenda.entities.Conta;
+import com.tokio.agenda.entities.Transferencia;
+import com.tokio.agenda.repositories.ContaRepository;
+import com.tokio.agenda.repositories.TransferenciaRepository;
+import com.tokio.agenda.services.exceptions.DiasException;
+import com.tokio.agenda.services.exceptions.ResourceNotFoundException;
+import com.tokio.agenda.services.exceptions.TaxaZeroException;
+
+@Service
+public class TransferenciaService {
+	@Autowired
+	private TransferenciaRepository repository;
+	
+    @Autowired
+    private ContaRepository contaRepository;	
+	
+
+	@Transactional(readOnly = true )
+	public Page<TransferenciaDTO> findAllPaged(PageRequest pageRequest){
+		Page<Transferencia> list = repository.findAll(pageRequest);
+		return list.map(x -> new TransferenciaDTO(x));
+	}
+
+
+	@Transactional(readOnly = true )
+	public TransferenciaDTO findById(Long id) {
+		Optional<Transferencia> obj = repository.findById(id);
+		Transferencia entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entidade não encontrada!"));
+		return new TransferenciaDTO(entity);
+	}
+
+	
+	public BigDecimal calcularTaxa(LocalDate dataTransferencia, BigDecimal valorTransferencia) {
+        int dias = LocalDate.now().until(dataTransferencia).getDays();
+        BigDecimal taxa = BigDecimal.ZERO;
+        
+        if (dias > 50) {
+            throw new DiasException("Data de transferência não disponível!");
+        }		
+        
+
+        if (dias == 0) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.025)).add(BigDecimal.valueOf(3));
+        }else
+        if (dias >= 0 && dias <= 10) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.000)).add(BigDecimal.valueOf(12));
+        } else if (dias >= 11 && dias <= 20) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.082)).add(BigDecimal.valueOf(0));
+        } else if (dias >= 21 && dias <= 30) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.069)).add(BigDecimal.valueOf(0));
+        } else if (dias >= 31 && dias <= 40) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.047)).add(BigDecimal.valueOf(0));
+        } else if (dias >= 41 && dias <= 50) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.017)).add(BigDecimal.valueOf(0));
+        }
+        return taxa;
+    }
+	
+	@Transactional
+	public TransferenciaDTO save(TransferenciaDTO dto) {
+		
+		BigDecimal taxa = calcularTaxa(dto.getDataTransferencia(), dto.getValor());	
+		
+		
+        if (taxa.compareTo(BigDecimal.ZERO) == 0) {
+            throw new TaxaZeroException("A transferência não pode ser realizada com taxa zero!");
+        }		
+		
+		Transferencia entity = new Transferencia();
+		dto.setTaxa(taxa);
+		copyDtoToEntity(dto, entity);
+		repository.save(entity);
+		return new TransferenciaDTO(entity);
+	}	
+    
+    
+	private void copyDtoToEntity(TransferenciaDTO dto, Transferencia entity) {
+		entity.setId(dto.getId());
+		entity.setTaxa(dto.getTaxa());
+		entity.setValor(dto.getValor());
+		
+
+        Optional<Conta> contaOrigemOptional = contaRepository.findByNumero(dto.getContaOrigem());
+        Conta contaOrigem = contaOrigemOptional.orElseThrow(() -> new ResourceNotFoundException("Conta de origem não encontrada!"));
+        
+        Optional<Conta> contaDestinoOptional = contaRepository.findByNumero(dto.getContaDestino());
+        Conta contaDestino = contaDestinoOptional.orElseThrow(() -> new ResourceNotFoundException("Conta de destino não encontrada!"));		
+		
+		entity.setContaOrigem(contaOrigem.getNumero());
+		entity.setContaDestino(contaDestino.getNumero());
+		entity.setDataAgendamento(LocalDate.now());
+		entity.setDataTransferencia(dto.getDataTransferencia());
+	}
+
+
+}

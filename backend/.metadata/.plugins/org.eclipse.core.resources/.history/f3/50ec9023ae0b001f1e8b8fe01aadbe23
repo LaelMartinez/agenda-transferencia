@@ -1,0 +1,5 @@
+package com.tokio.agenda.DTO;
+
+public class ContaDTO {
+
+}

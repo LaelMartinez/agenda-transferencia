@@ -1,0 +1,33 @@
+package com.tokio.agenda.services;
+
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.tokio.agenda.DTO.TransferenciaDTO;
+import com.tokio.agenda.entities.Transferencia;
+import com.tokio.agenda.repositories.TransferenciaRepository;
+
+@SpringBootTest
+public class TransferenciaServiceTests {
+
+    @Autowired
+    private TransferenciaService transferenciaService;
+
+    @Autowired
+    private TransferenciaRepository transferenciaRepository;
+
+    @Test
+    public void saveNotShouldPersistWhenTaxaIsZero() {
+        TransferenciaDTO transferenciaDTO = new TransferenciaDTO();
+        transferenciaDTO.setTaxa(BigDecimal.ZERO);
+
+        transferenciaService.save(transferenciaDTO);
+
+        verify(transferenciaRepository, never()).save(any(Transferencia.class));
+    }
+}

@@ -1,0 +1,114 @@
+package com.tokio.agenda.services;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.tokio.agenda.DTO.TransferenciaDTO;
+import com.tokio.agenda.entities.Transferencia;
+import com.tokio.agenda.repositories.TransferenciaRepository;
+import com.tokio.agenda.services.exceptions.TaxaZeroException;
+
+@SpringBootTest
+public class TransferenciaServiceTests {
+
+    @Mock
+    private TransferenciaRepository repository;
+
+    @InjectMocks
+    private TransferenciaService service;
+
+    @Test
+    public void saveShouldThrowTaxaZeroExceptionWhenTaxaIsZero() {
+        TransferenciaDTO transferenciaDTO = new TransferenciaDTO();
+        transferenciaDTO.setTaxa(BigDecimal.ZERO);
+
+        assertThrows(TaxaZeroException.class, () -> {
+            service.save(transferenciaDTO);
+        });
+
+        verify(repository, never()).save(any(Transferencia.class));
+    }
+
+
+    @Test
+    public void testCalcularTaxaDias0() {
+        LocalDate dataTransferencia = LocalDate.now();
+        BigDecimal valorTransferencia = BigDecimal.valueOf(1000);
+
+        BigDecimal taxaEsperada = BigDecimal.valueOf(25.0).add(BigDecimal.valueOf(3));
+        BigDecimal taxaCalculada = service.calcularTaxa(dataTransferencia, valorTransferencia);
+        assertEquals(taxaEsperada, taxaCalculada);
+    }
+
+    @Test
+    public void testCalcularTaxaDias0a10() {
+        LocalDate dataTransferencia = LocalDate.now().plusDays(10);
+        BigDecimal valorTransferencia = BigDecimal.valueOf(1000);
+
+        BigDecimal taxaEsperada = BigDecimal.valueOf(12.0);
+        BigDecimal taxaCalculada = service.calcularTaxa(dataTransferencia, valorTransferencia);
+        assertEquals(taxaEsperada, taxaCalculada);
+    }
+
+    @Test
+    public void testCalcularTaxaDias11a20() {
+        LocalDate dataTransferencia = LocalDate.now().plusDays(20);
+        BigDecimal valorTransferencia = BigDecimal.valueOf(1000);
+
+        BigDecimal taxaEsperada = BigDecimal.valueOf(82.0);
+        BigDecimal taxaCalculada = service.calcularTaxa(dataTransferencia, valorTransferencia);
+        assertEquals(taxaEsperada, taxaCalculada);
+    }
+
+    @Test
+    public void testCalcularTaxaDias21a30() {
+        LocalDate dataTransferencia = LocalDate.now().plusDays(30);
+        BigDecimal valorTransferencia = BigDecimal.valueOf(1000);
+
+        BigDecimal taxaEsperada = BigDecimal.valueOf(69.0);
+        BigDecimal taxaCalculada = service.calcularTaxa(dataTransferencia, valorTransferencia);
+        assertEquals(taxaEsperada, taxaCalculada);
+    }
+
+    @Test
+    public void testCalcularTaxaDias31a40() {
+        LocalDate dataTransferencia = LocalDate.now().plusDays(40);
+        BigDecimal valorTransferencia = BigDecimal.valueOf(1000);
+
+        BigDecimal taxaEsperada = BigDecimal.valueOf(47.0);
+        BigDecimal taxaCalculada = service.calcularTaxa(dataTransferencia, valorTransferencia);
+        assertEquals(taxaEsperada, taxaCalculada);
+    }
+
+    @Test
+    public void testCalcularTaxaDias41a50() {
+        LocalDate dataTransferencia = LocalDate.now().plusDays(50);
+        BigDecimal valorTransferencia = BigDecimal.valueOf(1000);
+
+        BigDecimal taxaEsperada = BigDecimal.valueOf(17.0);
+        BigDecimal taxaCalculada = service.calcularTaxa(dataTransferencia, valorTransferencia);
+        assertEquals(taxaEsperada, taxaCalculada);
+    }
+
+    @Test
+    public void testCalcularTaxaDiasExcedidos() {
+        LocalDate dataTransferencia = LocalDate.now().plusDays(51);
+        BigDecimal valorTransferencia = BigDecimal.valueOf(1000);
+
+        assertThrows(DiasException.class, () -> {
+            service.calcularTaxa(dataTransferencia, valorTransferencia);
+        });
+    }    
+    
+    
+}
+

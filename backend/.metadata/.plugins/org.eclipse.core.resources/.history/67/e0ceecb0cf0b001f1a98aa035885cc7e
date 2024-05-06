@@ -1,0 +1,43 @@
+package com.tokio.agenda.services;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.tokio.agenda.DTO.TransferenciaDTO;
+import com.tokio.agenda.entities.Transferencia;
+import com.tokio.agenda.repositories.TransferenciaRepository;
+import com.tokio.agenda.services.exceptions.TaxaZeroException;
+
+@SpringBootTest
+public class TransferenciaServiceTests {
+
+    @Mock
+    private TransferenciaRepository repository;
+
+    @InjectMocks
+    private TransferenciaService service;
+
+    @Test
+    public void saveShouldThrowTaxaZeroExceptionWhenTaxaIsZero() {
+        TransferenciaDTO transferenciaDTO = new TransferenciaDTO();
+        transferenciaDTO.setTaxa(BigDecimal.ZERO);
+
+        assertThrows(TaxaZeroException.class, () -> {
+            service.save(transferenciaDTO);
+        });
+
+        verify(repository, never()).save(any(Transferencia.class));
+    }
+
+    // Outros testes aqui...
+
+}
+

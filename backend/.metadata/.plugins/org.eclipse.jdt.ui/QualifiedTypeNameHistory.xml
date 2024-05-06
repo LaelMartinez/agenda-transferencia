@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Service"/>
+    <fullyQualifiedTypeName name="javax.persistence.OneToOne"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.exceptions.ResourceNotFoundException"/>
+    <fullyQualifiedTypeName name="com.devsuperior.trabalho.services.exceptions.DataBaseException"/>
+    <fullyQualifiedTypeName name="org.springframework.data.domain.Page"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.DTO.ContaDTO"/>
+    <fullyQualifiedTypeName name="com.sun.tools.classfile.Attribute.Factory"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.services.ContaService"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.services.exceptions.ResourceNotFoundException"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.services.exceptions.DataBaseException"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.repositories.TransferenciaRepository"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.services.exceptions.TaxaZeroException"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.entities.Transferencia"/>
+    <fullyQualifiedTypeName name="java.math.BigDecimal"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.repositories.ContaRepository"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.entities.Conta"/>
+    <fullyQualifiedTypeName name="java.time.temporal.ChronoUnit"/>
+    <fullyQualifiedTypeName name="java.time.LocalDate"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.services.exceptions.DiasException"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.DTO.TransferenciaDTO"/>
+    <fullyQualifiedTypeName name="com.tokio.agenda.tests.Factory"/>
+</qualifiedTypeNameHistroy>

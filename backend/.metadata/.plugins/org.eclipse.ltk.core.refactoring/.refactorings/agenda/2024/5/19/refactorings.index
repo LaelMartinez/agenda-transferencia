@@ -1,0 +1,20 @@
+1714999273552	Rename type 'TaxaService'
+1715002686252	Rename type 'ClientService'
+1715002942911	Delete element
+1715002981145	Rename type 'ClientRepository'
+1715003412905	Delete element
+1715003497976	Move compilation unit
+1715003504324	Delete element
+1715004148244	Copy compilation unit
+1715005002402	Copy compilation unit
+1715005017302	Rename type 'Transferencia'
+1715006235431	Rename type 'ClientResource'
+1715008829960	Rename type 'ProductRepositoryTests'
+1715010846936	Rename type 'ProductServiceTests'
+1715011880749	Rename type 'ProductResourceTests'
+1715013975863	Copy compilation unit
+1715013986434	Delete element
+1715014001527	Copy compilation unit
+1715022375554	Copy compilation unit
+1715026998975	Copy compilation unit
+1715027020351	Rename type 'TaxaZeroException2'

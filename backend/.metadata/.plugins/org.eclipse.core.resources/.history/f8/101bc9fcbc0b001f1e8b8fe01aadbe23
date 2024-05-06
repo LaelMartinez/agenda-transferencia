@@ -1,0 +1,63 @@
+package com.tokio.agenda.repositories;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.EmptyResultDataAccessException;
+
+import com.tokio.agenda.entities.Conta;
+
+@DataJpaTest
+public class ContaRepositoryTests {
+
+	@Autowired
+	private ContaRepository repository;
+	
+	private long existingId;
+	private long nonExistingId;
+	private long countTotalContas;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		existingId = 1L;
+		nonExistingId = 1000L;
+		countTotalContas = 25L;
+	}
+	
+	@Test
+	public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
+
+		Conta Conta = Factory.createConta();
+		Conta.setId(null);
+		
+		Conta = repository.save(Conta);
+		Optional<Conta> result = repository.findById(Conta.getId());
+		
+		Assertions.assertNotNull(Conta.getId());
+		Assertions.assertEquals(countTotalContas + 1L, Conta.getId());
+		Assertions.assertTrue(result.isPresent());
+		Assertions.assertSame(result.get(), Conta);
+	}
+	
+	@Test
+	public void deleteShouldDeleteObjectWhenIdExists() {
+		
+		repository.deleteById(existingId);
+
+		Optional<Conta> result = repository.findById(existingId);
+		
+		Assertions.assertFalse(result.isPresent());
+	}
+	
+	@Test
+	public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
+
+		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
+			repository.deleteById(nonExistingId);			
+		});
+	}
+}

@@ -1,0 +1,66 @@
+package com.tokio.agenda.services;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tokio.agenda.DTO.TransferenciaDTO;
+import com.tokio.agenda.entities.Transferencia;
+import com.tokio.agenda.repositories.TransferenciaRepository;
+
+@Service
+public class TransferenciaService {
+	@Autowired
+	private TransferenciaRepository repository;
+
+	@Transactional(readOnly = true )
+	public Page<TransferenciaDTO> findAllPaged(PageRequest pageRequest){
+		Page<Transferencia> list = repository.findAll(pageRequest);
+		return list.map(x -> new TransferenciaDTO(x));
+	}
+
+	
+	public BigDecimal calcularTaxa(LocalDate dataTransferencia, BigDecimal valorTransferencia) {
+        int dias = LocalDate.now().until(dataTransferencia).getDays();
+        BigDecimal taxa = BigDecimal.ZERO;
+
+        if (dias >= 0 && dias <= 3) {
+            taxa = valorTransferencia.multiply(BigDecimal.valueOf(0.025)).add(BigDecimal.valueOf(3));
+        } else if (dias >= 11 && dias <= 20) {
+            taxa = BigDecimal.ZERO; 
+        } else if (dias >= 21 && dias <= 30) {
+            taxa = BigDecimal.ZERO; 
+        } else if (dias >= 31 && dias <= 40) {
+            taxa = BigDecimal.ZERO; 
+        } else if (dias >= 41 && dias <= 50) {
+            taxa = BigDecimal.ZERO; 
+        }
+        return taxa;
+    }
+	
+	@Transactional
+	public TransferenciaDTO save(TransferenciaDTO dto) {
+		Transferencia entity = new Transferencia();
+		copyDtoToEntity(dto, entity);
+		repository.save(entity);
+		return new TransferenciaDTO(entity);
+	}	
+    
+    
+	private void copyDtoToEntity(TransferenciaDTO dto, Transferencia entity) {
+		entity.setId(dto.getId());
+		entity.setTaxa(dto.getTaxa());
+		entity.setValor(dto.getValor());
+		entity.setContaOrigem(dto.getContaOrigem());
+		entity.setContaDestino(dto.getContaDestino());
+		entity.setDataAgendamento(dto.getDataAgendamento());
+		entity.setDataTransferencia(dto.getDataTransferencia());
+	}
+
+
+}

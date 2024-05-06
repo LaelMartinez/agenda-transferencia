@@ -1,0 +1,87 @@
+package com.tokio.agenda.services;
+
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import com.tokio.agenda.DTO.ContaDTO;
+import com.tokio.agenda.entities.Conta;
+import com.tokio.agenda.repositories.ContaRepository;
+import com.tokio.agenda.services.exceptions.DataBaseException;
+import com.tokio.agenda.services.exceptions.ResourceNotFoundException;
+
+
+@Service
+public class ContaService {
+
+	@Autowired
+	private ContaRepository repository;
+
+	@Transactional(readOnly = true )
+	public Page<ContaDTO> findAllPaged(PageRequest pageRequest){
+
+		Page<Conta> list = repository.findAll(pageRequest);
+
+		return list.map(x -> new ContaDTO(x));
+	}
+
+	@Transactional(readOnly = true )
+	public ContaDTO findById(Long id) {
+		Optional<Conta> obj = repository.findById(id);
+		Conta entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entidade não encontrada!"));
+		return new ContaDTO(entity);
+	}
+
+	@Transactional
+	public ContaDTO insert(ContaDTO dto) {
+		Conta entity = new Conta();
+		copyDtoToEntity(dto, entity);
+		repository.save(entity);
+		return new ContaDTO(entity);
+	}
+
+	@Transactional
+	public ContaDTO update(Long id, ContaDTO dto) {
+		try {
+		Conta entity = repository.getReferenceById(id);
+		copyDtoToEntity(dto, entity);
+		entity = repository.save(entity);
+		return new ContaDTO(entity);
+		}
+		catch (EntityNotFoundException e){
+			throw new ResourceNotFoundException("Id not found " + id);
+
+		}
+	}
+
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+		}
+		catch(EmptyResultDataAccessException e){
+			throw new ResourceNotFoundException("Id not Found! " + id);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new DataBaseException("Integrity violation");
+		}
+
+
+	}
+	
+	private void copyDtoToEntity(ContaDTO dto, Conta entity) {
+		entity.setName(dto.getName());
+		entity.setCpf(dto.getCpf());
+		entity.setChildren(dto.getChildren());
+		entity.setIncome(dto.getIncome());
+		entity.setBirthDate(dto.getBirthDate());
+	}
+}

@@ -1,0 +1,108 @@
+package com.tokio.agenda.resources;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+
+import com.tokio.agenda.DTO.ContaDTO;
+import com.tokio.agenda.services.ContaService;
+import com.tokio.agenda.services.exceptions.ResourceNotFoundException;
+import com.tokio.agenda.tests.Factory;
+
+
+
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class ContaResourceTests {
+
+	@Autowired
+	private MockMvc mockMvc;
+	
+	@MockBean
+	private ContaService service;
+	
+	private Long existingId;
+	private Long nonExistingId;
+	private ContaDTO ContaDTO;
+	@SuppressWarnings("unused")
+	private PageImpl<ContaDTO> page;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+
+		existingId = 1L;
+		nonExistingId = 1000L;
+		
+		ContaDTO = Factory.createContaDTO();
+		page = new PageImpl<>(List.of(ContaDTO));
+
+		when(service.findById(existingId)).thenReturn(ContaDTO);
+		when(service.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
+
+		when(service.insert(any())).thenReturn(ContaDTO);
+		
+		when(service.update(eq(existingId), any())).thenReturn(ContaDTO);
+		when(service.update(eq(nonExistingId), any())).thenThrow(ResourceNotFoundException.class);
+		
+		doNothing().when(service).delete(existingId);
+		doThrow(ResourceNotFoundException.class).when(service).delete(nonExistingId);
+
+	}
+	
+
+
+
+	
+	
+	@Test
+	public void findAllShouldReturnPage() throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(get("/contas")
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void findByIdShouldReturnContaWhenIdExists() throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(get("/Contas/{id}", existingId)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.id").exists());
+		result.andExpect(jsonPath("$.name").exists());
+		result.andExpect(jsonPath("$.description").exists());
+	}
+	
+	@Test
+	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(get("/Contas/{id}", nonExistingId)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isNotFound());
+	} 
+}

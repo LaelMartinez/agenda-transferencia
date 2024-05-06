@@ -1,0 +1,18 @@
+package com.tokio.agenda.tests;
+
+import com.tokio.agenda.DTO.ContaDTO;
+import com.tokio.agenda.entities.Conta;
+
+
+public class Factory {
+	
+	public static Conta createConta() {
+		Conta Conta = new Conta(1L, "J123456789", "João");
+		return Conta;		
+	}
+	
+	public static ContaDTO createContaDTO() {
+		Conta Conta = createConta();
+		return new ContaDTO(Conta);
+	}
+}

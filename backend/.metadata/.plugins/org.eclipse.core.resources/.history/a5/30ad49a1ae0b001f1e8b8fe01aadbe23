@@ -1,0 +1,11 @@
+package com.tokio.agenda.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.devsuperior.trabalho.entities.Client;
+
+@Repository
+public interface ContaRepository extends JpaRepository<Client, Long>{
+
+}

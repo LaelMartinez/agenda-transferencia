@@ -1,0 +1,11 @@
+package com.tokio.agenda.exceptions;
+
+public class Snippet {
+	public static void main(String[] args) {
+		this.id = id;
+		this.numero = numero;
+		this.nome = nome;
+		
+	}
+}
+

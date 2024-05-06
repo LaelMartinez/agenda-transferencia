@@ -1,0 +1,5 @@
+package com.tokio.agenda.entities;
+
+public class Transferencia {
+
+}
