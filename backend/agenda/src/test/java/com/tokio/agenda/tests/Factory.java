@@ -1,0 +1,44 @@
+package com.tokio.agenda.tests;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import com.tokio.agenda.DTO.ContaDTO;
+import com.tokio.agenda.DTO.TransferenciaDTO;
+import com.tokio.agenda.entities.Conta;
+import com.tokio.agenda.entities.Transferencia;
+
+
+public class Factory {
+	
+	public static Conta createConta() {
+		Conta Conta = new Conta(1L, "J123456789", "João");
+		return Conta;		
+	}
+	
+	public static ContaDTO createContaDTO() {
+		Conta Conta = createConta();
+		return new ContaDTO(Conta);
+	}
+
+	public static Transferencia createTransferencia() {
+        Conta contaOrigem = new Conta(1L, "J123456789", "João");
+        Conta contaDestino = new Conta(1L, "C123456789", "Carlos");
+
+        LocalDate dataTransferencia = LocalDate.of(2024, 5, 6);
+        LocalDate dataAgendamento = LocalDate.of(2024, 5, 6);
+
+        BigDecimal valor = BigDecimal.valueOf(10.00);
+        BigDecimal taxa = BigDecimal.ZERO; 
+
+        Transferencia transferencia = new Transferencia(1L, contaOrigem.getNumero(), contaDestino.getNumero(), valor, dataTransferencia, dataAgendamento, taxa);		
+		return transferencia;		
+	}
+	
+	public static TransferenciaDTO createTransferenciaDTO() {
+		Transferencia transferencia = createTransferencia();
+		return new TransferenciaDTO(transferencia);
+	}
+
+
+}

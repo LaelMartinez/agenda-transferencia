@@ -1,0 +1,43 @@
+package com.tokio.agenda.repositories;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import com.tokio.agenda.entities.Transferencia;
+import com.tokio.agenda.tests.Factory;
+
+@DataJpaTest
+public class TransferenciaRepositoryTests {
+
+	@Autowired
+	private TransferenciaRepository repository;
+	
+	private long countTotalTransferencias;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		countTotalTransferencias = 0L;
+	}
+	
+	@Test
+	public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
+
+		Transferencia Transferencia = Factory.createTransferencia();
+		Transferencia.setId(null);
+		
+		Transferencia = repository.save(Transferencia);
+		Optional<Transferencia> result = repository.findById(Transferencia.getId());
+		
+		Assertions.assertNotNull(Transferencia.getId());
+		Assertions.assertEquals(countTotalTransferencias + 1L, Transferencia.getId());
+		Assertions.assertTrue(result.isPresent());
+		Assertions.assertSame(result.get(), Transferencia);
+	}
+	
+
+
+}
