@@ -1,0 +1,5 @@
+package com.tokio.agenda.configs;
+
+public class SecurityConfig {
+
+}

@@ -1,0 +1,310 @@
+{
+	"info": {
+		"_postman_id": "c126809e-e1ec-4993-8dcb-721a2916ac1f",
+		"name": "Tokio Marine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17477582"
+	},
+	"item": [
+		{
+			"name": "Contas",
+			"item": [
+				{
+					"name": "Contas List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/contas",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"contas"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Associados List",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/associados",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"associados"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 17 Sep 2023 22:21:24 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"uuid\": \"b7ebf70a-b0f3-4814-9433-61e5cbdab353\",\n        \"documento\": \"19172610000109\",\n        \"tipoPessoa\": \"PJ\",\n        \"nome\": \"M.B.F. METALURGICA BRASILEIRA DE FIXADORES LTDA\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Contas By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/contas/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"contas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Contas",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"numero\": \"M123456789\",\r\n    \"nome\": \"Maria das Graças\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/contas",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"contas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Contas",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"documento\": \"28712174831\",\r\n    \"tipo_pessoa\": \"01\",\r\n    \"nome\": \"Lael Siqueira Martinez Junior\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/associados",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"associados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Contas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/categories",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transferencias",
+			"item": [
+				{
+					"name": "Lista Transferencias",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/transferencias",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"transferencias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nova Transferencia",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"contaOrigem\": \"M123456789\",\r\n    \"contaDestino\": \"B123456789\",\r\n    \"valor\": 100.00,\r\n    \"dataTransferencia\": \"2024-05-10\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/transferencias",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"transferencias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transferencias By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/transferencias/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"transferencias",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
